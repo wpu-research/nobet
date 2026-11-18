@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nöbet</title>
+<meta name="description" content="Nöbet: gününe, uykuna ve tabağına nöbet tutan AI hayat koçu.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: solda kayan yatırımcı anlatısı, sağda yapışkan telefon mock'u; dar ekranda telefon en üstte */
+*{box-sizing:border-box}
+:root{
+  --bg:#0a0f17; --ink:#e8edf5; --muted:#93a1b5; --line:#243044; --panel:#121b29;
+  --navy:#0e1a2b; --navy2:#16263d; --amber:#f2a43a; --amber-ink:#2a1a03; --onnavy:#e8edf5; --onnavy-muted:#8fa0b8;
+  --hyvex:#5b9dff; --docks:#b58bff; --ders:#4fd18b; --rutin:#f2a43a; --yol:#9aa7ba; --yemek:#ff7d9c; --alarm:#ff5d5d;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+  color-scheme:dark;
+}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.55;
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+nav.top-nav{position:sticky;top:0;z-index:5;background:rgba(10,15,23,.85);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin:0 calc(-1*max(20px,env(safe-area-inset-left,0px)))}
+nav.top-nav .in{max-width:1180px;margin:0 auto;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+nav.top-nav b{font-family:var(--display);font-size:1.2rem;display:flex;gap:10px;align-items:center}
+nav.top-nav .links{display:flex;gap:18px;font-size:.85rem;flex-wrap:wrap}
+nav.top-nav a{color:var(--muted);text-decoration:none}nav.top-nav a:hover{color:var(--amber)}
+.layout{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:56px;padding-block:48px 80px}
+.side{position:sticky;top:84px;align-self:start}
+@media (max-width:920px){.layout{grid-template-columns:1fr}.side{position:static;order:-1}.links{display:none!important}}
+.story{display:flex;flex-direction:column;gap:72px;min-width:0}
+section h2{font-family:var(--display);font-size:2rem;margin:0 0 14px;text-wrap:balance;line-height:1.15}
+.eyebrow{font-family:var(--mono);font-size:.75rem;color:var(--amber);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;display:block}
+.lead{font-size:1.1rem;color:var(--muted);max-width:60ch;margin:0}
+.hero h1{font-family:var(--display);font-size:clamp(2.6rem,6vw,4.2rem);line-height:1.02;margin:0 0 18px;letter-spacing:-.02em;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.cta{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{display:inline-block;padding:12px 20px;border-radius:12px;font-weight:600;text-decoration:none;font-size:.95rem}
+.btn.p{background:var(--amber);color:var(--amber-ink)}.btn.s{border:1px solid var(--line);color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.card h3{font-family:var(--display);font-size:1.05rem;margin:0 0 6px}
+.card p{margin:0;font-size:.9rem;color:var(--muted)}
+.card .num{font-family:var(--mono);color:var(--amber);font-size:.8rem;display:block;margin-bottom:8px}
+.quote{border-left:3px solid var(--amber);padding:6px 0 6px 18px;font-size:1.05rem;margin:20px 0 0;color:var(--ink);font-family:var(--mono);font-size:.9rem;line-height:1.8}
+.steps{display:flex;flex-direction:column;gap:12px;margin-top:18px}
+.step{display:grid;grid-template-columns:56px 1fr;gap:14px;align-items:start}
+.step b{font-family:var(--mono);font-size:.8rem;background:var(--navy2);border:1px solid var(--line);border-radius:10px;padding:8px 0;text-align:center;color:var(--amber)}
+.step div h3{margin:0;font-size:1rem}.step div p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.tag-now{font-size:.68rem;background:var(--amber);color:var(--amber-ink);border-radius:6px;padding:1px 6px;margin-left:6px;font-weight:700;vertical-align:middle}
+table.biz{width:100%;border-collapse:collapse;margin-top:16px;font-size:.92rem}
+table.biz td,table.biz th{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left}
+table.biz th{font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.tw{overflow-x:auto}
+.ask{background:linear-gradient(140deg,var(--navy2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:28px}
+.ask ul{margin:12px 0 0;padding-left:20px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.8rem;text-align:center}
+.hint{font-size:.78rem;color:var(--muted);text-align:center;margin-top:12px}
+/* Telefon */
+.phone{width:100%;max-width:390px;margin:0 auto;background:#05080d;border-radius:46px;padding:12px;box-shadow:0 30px 60px -20px rgba(5,10,20,.45)}
+.scr{background:var(--navy);color:var(--onnavy);border-radius:36px;height:780px;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.sb{display:flex;justify-content:space-between;padding:14px 26px 6px;font-size:.78rem;font-weight:600;font-variant-numeric:tabular-nums}
+.top{padding:6px 20px 10px;display:flex;justify-content:space-between;align-items:center}
+.top h3{font-family:var(--display);margin:0;font-size:1.35rem}
+.top small{color:var(--onnavy-muted);font-size:.78rem}
+.days{display:flex;gap:6px;padding:0 20px 10px}
+.days button{flex:1;border:0;border-radius:10px;padding:7px 0;background:var(--navy2);color:var(--onnavy-muted);font:600 .78rem var(--body);cursor:pointer}
+.days button[aria-pressed="true"]{background:var(--amber);color:var(--amber-ink)}
+.body{flex:1;overflow-y:auto;padding:0 16px 12px;display:flex;flex-direction:column;gap:12px}
+.now{background:var(--navy2);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.now .lbl{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--onnavy-muted)}
+.now .ttl{font-family:var(--display);font-size:1.5rem;font-weight:700}
+.now .meta{font-size:.8rem;color:var(--onnavy-muted);font-variant-numeric:tabular-nums}
+.bar{height:6px;background:#0a1320;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--amber)}
+.next{font-size:.82rem;color:var(--onnavy)}
+.next b{color:var(--amber)}
+.tl{display:flex;flex-direction:column;gap:4px}
+.it{display:grid;grid-template-columns:48px 4px 1fr;gap:10px;align-items:center;padding:6px 4px;border-radius:10px}
+.it .tm{font-family:var(--mono);font-size:.72rem;color:var(--onnavy-muted)}
+.it .k{height:100%;min-height:30px;border-radius:4px}
+.it .n{font-size:.86rem;font-weight:600}
+.it .n small{display:block;font-weight:400;color:var(--onnavy-muted);font-size:.72rem}
+.it.cur{background:var(--navy2)}
+.it.past{opacity:.45}
+.sim{border-top:1px solid #22324a;padding:10px 18px 12px;display:flex;flex-direction:column;gap:8px;font-size:.75rem;color:var(--onnavy-muted)}
+.sim .row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.sim input[type=range]{width:100%;accent-color:var(--amber)}
+.sim label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.nav{display:flex;justify-content:space-around;padding:8px 0 16px;border-top:1px solid #22324a}
+.nav span{font-size:.7rem;color:var(--onnavy-muted);display:flex;flex-direction:column;align-items:center;gap:3px}
+.nav span.on{color:var(--amber)}
+.nav svg{width:20px;height:20px}
+.toast{position:absolute;left:12px;right:12px;top:40px;background:#f7f8fa;color:#0e1a2b;border-radius:18px;padding:12px 14px;display:grid;grid-template-columns:36px 1fr;gap:10px;box-shadow:0 12px 30px rgba(0,0,0,.4);transition:transform .35s ease,opacity .35s}
+.toast.off{transform:translateY(-140%);opacity:0}
+.toast .ic{width:36px;height:36px;border-radius:9px;background:var(--navy);display:grid;place-items:center}
+.toast b{font-size:.82rem}.toast p{margin:2px 0 0;font-size:.8rem;line-height:1.35}
+.toast .al{color:var(--alarm);font-weight:700}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+
+.pane{flex:1;overflow-y:auto;padding:0 16px 14px;display:flex;flex-direction:column;gap:12px}
+.cardm{background:var(--navy2);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.cardm .lbl{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--onnavy-muted)}
+.big{font-family:var(--display);font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.big small{font-size:.8rem;color:var(--onnavy-muted);font-weight:500}
+.macro{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:.72rem;color:var(--onnavy-muted)}
+.macro b{display:block;color:var(--onnavy);font-size:.9rem;font-variant-numeric:tabular-nums}
+.meal{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;font-size:.84rem}
+.meal .ph{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;font-size:1.4rem;background:linear-gradient(135deg,#2b3d58,#1a2a40)}
+.meal small{display:block;color:var(--onnavy-muted);font-size:.72rem}
+.meal .k{font-family:var(--mono);font-size:.78rem;color:var(--amber)}
+.pbtn{border:0;border-radius:12px;padding:11px;background:var(--amber);color:var(--amber-ink);font:700 .88rem var(--body);cursor:pointer}
+.pbtn.g{background:var(--navy2);color:var(--onnavy);border:1px solid #2a3c58}
+.warn{font-size:.78rem;color:var(--alarm)}
+.fine{font-size:.68rem;color:var(--onnavy-muted)}
+.bars{display:flex;gap:6px;align-items:flex-end;height:90px}
+.bars div{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:.62rem;color:var(--onnavy-muted)}
+.bars i{display:block;width:100%;border-radius:5px 5px 2px 2px;background:#5b9dff}
+.bars i.lo{background:var(--alarm)}
+.ring{width:110px;height:110px;border-radius:50%;display:grid;place-items:center;margin:0 auto;background:conic-gradient(var(--amber) calc(var(--v)*1%),#0a1320 0)}
+.ring span{width:84px;height:84px;border-radius:50%;background:var(--navy2);display:grid;place-items:center;font-family:var(--display);font-size:1.7rem;font-weight:700}
+.row2{display:flex;justify-content:space-between;font-size:.8rem;font-variant-numeric:tabular-nums}
+.row2 b{color:var(--amber)}
+.water{display:flex;gap:5px}.water button{flex:1;height:26px;border-radius:6px;border:1px solid #2a3c58;background:#0a1320;cursor:pointer}
+.water button.f{background:#5b9dff;border-color:#5b9dff}
+.energy{display:flex;gap:6px}.energy button{flex:1;padding:7px 0;border-radius:8px;border:1px solid #2a3c58;background:#0a1320;color:var(--onnavy);font:600 .8rem var(--body);cursor:pointer}
+.energy button[aria-pressed="true"]{background:var(--amber);color:var(--amber-ink)}
+.ins{font-size:.8rem;line-height:1.45;border-left:3px solid var(--amber);padding-left:10px}
+.onb{position:absolute;inset:0;z-index:4;background:var(--navy);display:flex;flex-direction:column;gap:14px;padding:56px 22px 22px;overflow-y:auto}
+.onb h4{font-family:var(--display);font-size:1.6rem;margin:0;line-height:1.15}
+.onb p{margin:0;font-size:.85rem;color:var(--onnavy-muted)}
+.perm{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;font-size:.84rem;background:var(--navy2);border-radius:12px;padding:10px 12px}
+.perm small{display:block;color:var(--onnavy-muted);font-size:.7rem}
+.perm .st{font-size:.72rem;color:var(--onnavy-muted)}.perm.ok .st{color:var(--ders);font-weight:700}
+.prog{font-family:var(--mono);font-size:.75rem;color:var(--amber)}
+.nav button{background:none;border:0;font:inherit;font-size:.7rem;color:var(--onnavy-muted);display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.nav button[aria-pressed="true"]{color:var(--amber)}
+.nav button svg{width:20px;height:20px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body>
+<nav class="top-nav"><div class="in">
+ <b><svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+      <rect width="28" height="28" rx="16" fill="#0e1a2b"/>
+      <path d="M32 11 L50 18 V31 C50 42 42 50 32 54 C22 50 14 42 14 31 V18 Z" fill="none" stroke="#f2a43a" stroke-width="3.5" stroke-linejoin="round"/>
+      <path d="M32 22 V33 L39 37" fill="none" stroke="#e8edf5" stroke-width="3.5" stroke-linecap="round"/>
+    </svg> Nöbet</b>
+ <div class="links"><a href="#problem">Problem</a><a href="#cozum">Çözüm</a><a href="#moduller">Modüller</a><a href="#nasil">Nasıl çalışır</a><a href="#rakipler">Rakipler</a><a href="#model">İş modeli</a><a href="#yol">Yol haritası</a><a href="#yatirim">Yatırım</a></div>
+</div></nav>
+
+<div class="layout">
+<main class="story">
+ <section class="hero">
+  <span class="eyebrow">AI hayat koçu · ön tohum</span>
+  <h1>Takvim hatırlatır. <em>Nöbet</em> hayatını düzende tutar.</h1>
+  <p class="lead">Nöbet günü saat saat planlar, konumunla karşılaştırır ve plandan saptığın anda uyarır. Uykunu, yediklerini, sporunu ve enerjini de izler. Bir AI koç bunları birleştirip programını her hafta yeniden kurar.</p>
+  <div class="cta"><a class="btn p" href="#yatirim">Yatırım görüşmesi</a><a class="btn s" href="#nasil">Nasıl çalışır</a></div>
+ </section>
+
+ <section id="problem">
+  <span class="eyebrow">Problem</span>
+  <h2>Plan yapmak kolay. Plana uymak zor.</h2>
+  <p class="lead">Birden fazla işi, okulu ve şehir içi yolculuğu aynı güne sığdıran insanlar plan yapar ama günün ortasında plan dağılır. Takvim uygulamaları sadece hatırlatır. Kimse senin gerçekten nerede olduğuna bakmaz.</p>
+  <div class="grid">
+   <div class="card"><h3>Takvim pasif</h3><p>Bildirim gelir, kaydırırsın, unutulur. Uygulama gittin mi gitmedin mi bilmez.</p></div>
+   <div class="card"><h3>Yol süreleri tahmin</h3><p>Harita uygulaması ideal süreyi verir. Senin aktarmanı, bekleme süreni ve alışkanlığını bilmez.</p></div>
+   <div class="card"><h3>Rutin ölçülmez</h3><p>Spor, kahvaltı ve kalkış saati planda durur ama haftalık uyum oranını kimse tutmaz.</p></div>
+  </div>
+ </section>
+
+ <section id="cozum">
+  <span class="eyebrow">Çözüm</span>
+  <h2>Programına nöbet tutan bir asistan</h2>
+  <p class="lead">Nöbet her bloğun nerede geçmesi gerektiğini bilir. Çıkış saati geldiğinde hâlâ yerindeysen bildirim gönderir. Sağdaki uygulamada demo saatini kaydır ve "Yerimden kıpırdamadım" kutusunu işaretle.</p>
+  <p class="quote">12:05 · 📍 Merter<br>Hâlâ Merter'desin. Şimdi çıkmazsan 13:00'ü kaçırırsın.</p>
+  <div class="grid">
+   <div class="card"><span class="num">01</span><h3>Saat saat program</h3><p>Kalkıştan gece son bloğa kadar bütün gün, renkli bloklarla.</p></div>
+   <div class="card"><span class="num">02</span><h3>Konum alarmı</h3><p>Geofence ile kritik çıkış saatlerinde yerinde olup olmadığını kontrol eder.</p></div>
+   <div class="card"><span class="num">03</span><h3>Öğrenen AI</h3><p>Gerçek yol sürelerini ve notlarını okuyup programı yeniden düzenler.</p></div>
+  </div>
+ </section>
+
+ <section id="baslat">
+  <span class="eyebrow">Tek dokunuşla başla</span>
+  <h2>"Analize başla" de, gerisini Nöbet toplasın</h2>
+  <p class="lead">Kullanıcı form doldurmaz. Konum, uyku, adım, kamera ve bildirim izinlerini bir kez verir. Nöbet 7 gün boyunca rutini kendisi öğrenir: hangi saatte nerede olduğunu, ne kadar uyuduğunu, yollarda ne kadar kaldığını. Kullanıcıdan sadece verinin otomatik gelmediği yerlerde, yemek fotoğrafı ve kısa not için ister. 7. günün sonunda ilk program hazırdır.</p>
+  <div class="grid">
+   <div class="card"><span class="num">OTOMATİK</span><h3>Konum, uyku, adım</h3><p>Arka planda konum, Apple Health / Health Connect.</p></div>
+   <div class="card"><span class="num">İSTENEN</span><h3>Fotoğraf ve not</h3><p>Öğün bloğunda fotoğraf, gün sonunda 10 saniyelik sesli not.</p></div>
+   <div class="card"><span class="num">7. GÜN</span><h3>İlk program</h3><p>Gerçek veriden kurulan saat saat hafta ve kritik alarmlar.</p></div>
+  </div>
+ </section>
+
+ <section id="moduller">
+  <span class="eyebrow">Modüller</span>
+  <h2>Zaman koçundan hayat koçuna</h2>
+  <p class="lead">Plan ve konum altyapısı, yemek ve uyku takibini de mümkün kılıyor. Uygulamada alttaki Yemek, Uyku ve Koç sekmelerini dene.</p>
+  <div class="grid">
+   <div class="card"><span class="num">PLAN</span><h3>Gün ve konum</h3><p>Saat saat program, toplu taşıma süreleri, kritik çıkış saatlerinde konum alarmı.</p></div>
+   <div class="card"><span class="num">UYKU</span><h3>Uyku düzeni</h3><p>Yatış ve kalkış hedefi, Apple Health / Health Connect verisi, haftalık uyku borcu, 22:15 "ekranı bırak" uyarısı.</p></div>
+   <div class="card"><span class="num">YEMEK</span><h3>Fotoğrafla kalori</h3><p>Tabağın fotoğrafından yemek, porsiyon ve makro tahmini. Tekrar eden öğünleri konuma göre hatırlar, atlanan öğünü yakalar.</p></div>
+   <div class="card"><span class="num">SPOR</span><h3>Antrenman</h3><p>Sabah bloğu konum ve adım verisiyle doğrulanır, haftalık ilerleme tutulur.</p></div>
+   <div class="card"><span class="num">BEDEN</span><h3>Su, adım, enerji</h3><p>Tek dokunuşla su ve 1–5 enerji kaydı. AI en verimli saatlerini bulur.</p></div>
+   <div class="card"><span class="num">KOÇ</span><h3>AI koç ve puan</h3><p>Günlük Nöbet puanı, akşam özeti, sesli not ve verileri birleştiren içgörüler.</p></div>
+  </div>
+  <p class="quote">"Uykun 7 saatin altına düştüğü 2 günde 12:05 çıkışını kaçırdın."</p>
+ </section>
+
+ <section id="nasil">
+  <span class="eyebrow">Nasıl çalışır</span>
+  <h2>Dört adımda plandan alışkanlığa</h2>
+  <div class="steps">
+   <div class="step"><b>1</b><div><h3>Programını kur <span class="tag-now">mock hazır</span></h3><p>Ders programı, işler, otel veya ev konumu girilir. Nöbet toplu taşıma sürelerini ekleyip haftayı oluşturur.</p></div></div>
+   <div class="step"><b>2</b><div><h3>Bir hafta izle</h3><p>Konum kaydı ve kısa notlarla gerçek gün ölçülür: "19:55 Merter, 20:15 Yenikapı".</p></div></div>
+   <div class="step"><b>3</b><div><h3>AI yeniden planlar</h3><p>Hangi yol gerçekte kaç dakika sürüyor, hangi blok hep kayıyor, AI bunları görüp programı düzeltir.</p></div></div>
+   <div class="step"><b>4</b><div><h3>Hayat koçu</h3><p>Uyku, yemek, spor ve enerji verisiyle günlük puan, akşam özeti ve haftalık değerlendirme.</p></div></div>
+  </div>
+ </section>
+
+ <section id="ornek">
+  <span class="eyebrow">İlk kullanıcı</span>
+  <h2>Kurucunun kendi haftası ile test ediliyor</h2>
+  <p class="lead">İlk sürüm, savunma sanayi yazılımı, bir yazılım girişimi ve üniversite derslerini aynı haftaya sığdıran kurucunun gerçek programıyla kuruldu.</p>
+  <div class="grid">
+   <div class="card"><span class="num">23,5 sa</span><h3>Şirket işi</h3><p>Haftada beş gün, her gün en geç 13:00'te ofiste.</p></div>
+   <div class="card"><span class="num">17,5 sa</span><h3>Girişim işi</h3><p>Sabah Merter'de, akşam otel odasında.</p></div>
+   <div class="card"><span class="num">6 alarm</span><h3>Kritik anlar</h3><p>08:10 · 08:25 · 12:05 · 14:30 öğün · 18:20 · 22:15 ekran</p></div>
+   <div class="card"><span class="num">22:45</span><h3>Yatış hedefi</h3><p>06:45 kalkış için 8 saat uyku.</p></div>
+  </div>
+ </section>
+
+ <section id="gizlilik">
+  <span class="eyebrow">Güven</span>
+  <h2>Hassas veri, açık kurallar</h2>
+  <div class="grid">
+   <div class="card"><h3>KVKK uyumu</h3><p>Konum, sağlık ve yemek fotoğrafları özel nitelikli veri sayılır. Her modül ayrı ve açık izinle açılır.</p></div>
+   <div class="card"><h3>Önce cihazda</h3><p>Konum geçmişi ve fotoğraflar mümkün olduğunca cihazda işlenir. Sunucuya sadece özet gider.</p></div>
+   <div class="card"><h3>Tıbbi iddia yok</h3><p>Kalori fotoğraftan tahmin edilir ve ±%20–30 sapabilir. Nöbet bir koçtur, diyetisyen ya da doktor değildir.</p></div>
+  </div>
+ </section>
+
+ <section id="rakipler">
+  <span class="eyebrow">Rakipler</span>
+  <h2>Herkes tek bir işi yapıyor</h2>
+  <p class="lead">Plan, yemek ve uyku için ayrı ayrı güçlü uygulamalar var. Taradığımız ürünlerin hiçbiri planı, konumu, yemeği ve uykuyu tek uygulamada birleştirmiyor. Konuma göre "çıkman gerekiyor" uyarısı veren bir rakip bulamadık.</p>
+  <div class="tw"><table class="biz">
+   <thead><tr><th>Kategori</th><th>Örnekler</th><th>Yıllık fiyat (yaklaşık)</th><th>Eksikleri</th></tr></thead>
+   <tbody>
+    <tr><td><b>AI takvim</b></td><td>Motion, Reclaim, Sunsama, Structured</td><td>$10 – $300</td><td>Yemek, uyku ve konum yok</td></tr>
+    <tr><td><b>Kalori</b></td><td>Cal AI, MyFitnessPal, Yazio, Lose It, Diyetkolik</td><td>$30 – $80</td><td>Plan, uyku ve konum yok</td></tr>
+    <tr><td><b>Uyku</b></td><td>Oura, Whoop, Rise, Sleep Cycle</td><td>$70 – $240 (+ donanım)</td><td>Plan ve yemek yok, çoğu donanım istiyor</td></tr>
+    <tr><td><b>Alışkanlık koçu</b></td><td>Fabulous, Noom, Habitica, Routinery</td><td>$0 – $210</td><td>Konum ve sağlık verisi yok</td></tr>
+    <tr><td><b>Konum hatırlatma</b></td><td>Apple Reminders, Google Keep</td><td>Ücretsiz</td><td>Plan, yol süresi ve AI yok</td></tr>
+   </tbody>
+  </table></div>
+  <div class="grid">
+   <div class="card"><span class="num">TEHDİT 1</span><h3>Apple ve Google</h3><p>Konum, sağlık verisi ve AI ellerinde. Bunları birleştirebilirler.</p></div>
+   <div class="card"><span class="num">TEHDİT 2</span><h3>Kalori uygulamaları</h3><p>Cal AI ve Yazio plan ve uyku ekleyerek genişleyebilir.</p></div>
+   <div class="card"><span class="num">TEHDİT 3</span><h3>Giyilebilirler</h3><p>Oura ve Whoop daha doğru uyku verisi sunuyor. Nöbet onlarla rekabet etmek yerine onlardan veri alır.</p></div>
+  </div>
+  <p class="hint" style="text-align:left">Fiyatlar Kasım 2026'da üçüncü taraf kaynaklardan derlendi. Yaklaşık değerlerdir.</p>
+ </section>
+
+ <section id="model">
+  <span class="eyebrow">İş modeli</span>
+  <h2>Freemium abonelik</h2>
+  <div class="tw"><table class="biz">
+   <thead><tr><th>Paket</th><th>İçerik</th><th>Hedef kullanıcı</th></tr></thead>
+   <tbody>
+    <tr><td><b>Ücretsiz</b></td><td>Program ve hatırlatma</td><td>Öğrenci, yeni kullanıcı</td></tr>
+    <tr><td><b>Pro</b></td><td>Konum alarmı, fotoğrafla kalori, uyku borcu, AI koç, haftalık rapor</td><td>Çok işli profesyoneller</td></tr>
+    <tr><td><b>Ekip</b></td><td>Saha ekipleri için vardiya ve konum uyumu</td><td>Saha ve operasyon şirketleri</td></tr>
+   </tbody>
+  </table></div>
+  <p class="hint" style="text-align:left">İlk öneri: Pro aylık 99–199 TL, yıllık 899–1.499 TL, öğrenciye %40–50 indirim. Kesin fiyat beta testinden sonra belirlenecek.</p>
+ </section>
+
+ <section id="yol">
+  <span class="eyebrow">Yol haritası</span>
+  <h2>Mock'tan mağazaya</h2>
+  <div class="steps">
+   <div class="step"><b>Şimdi</b><div><h3>Marka ve etkileşimli mock</h3><p>Bu sayfadaki uygulama.</p></div></div>
+   <div class="step"><b>F1</b><div><h3>Mobil uygulama (iOS + Android)</h3><p>Program, hatırlatma, geofence, Apple Health / Health Connect bağlantısı.</p></div></div>
+   <div class="step"><b>F2</b><div><h3>İzleme haftası, yemek ve uyku</h3><p>Gerçek yol süresi, fotoğrafla kalori, uyku borcu, sesli not.</p></div></div>
+   <div class="step"><b>F3</b><div><h3>AI planlayıcı ve koç modu</h3><p>Otomatik yeniden planlama, uyum puanı, beta kullanıcılar.</p></div></div>
+  </div>
+ </section>
+
+ <section id="yatirim">
+  <div class="ask">
+   <span class="eyebrow">Yatırım</span>
+   <h2>Ön tohum turu için görüşüyoruz</h2>
+   <p class="lead">Tutar ve şartlar görüşmede paylaşılır. Kaynak şu üç işe gider:</p>
+   <ul><li>Mobil uygulama ve konum altyapısı</li><li>AI planlama motoru ve yemek tanıma modeli</li><li>İlk 1.000 beta kullanıcı</li></ul>
+  </div>
+ </section>
+</main>
+
+<aside class="side">
+ <div class="phone">
+ <div class="scr">
+  <div class="toast off" id="toast" role="status" aria-live="polite">
+    <div class="ic"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 11 L50 18 V31 C50 42 42 50 32 54 C22 50 14 42 14 31 V18 Z" fill="none" stroke="#f2a43a" stroke-width="5"/><path d="M32 22 V33 L39 37" fill="none" stroke="#e8edf5" stroke-width="5" stroke-linecap="round"/></svg></div>
+    <div><b>Nöbet · şimdi</b><p id="toastText"></p></div>
+  </div>
+  <div class="onb" id="onb">
+    <h4>Seni 7 gün izleyeyim, sonra programını ben kurayım.</h4>
+    <p>Bir kez izin ver. Nöbet uyku, adım ve konum verisini kendisi toplar. Sadece fotoğraf ve kısa not ister.</p>
+    <div class="perm" data-p><span>📍</span><span>Konum (her zaman)<small>Rutin yerlerini ve yol sürelerini öğrenir</small></span><span class="st">bekliyor</span></div>
+    <div class="perm" data-p><span>🌙</span><span>Sağlık: uyku ve adım<small>Apple Health / Health Connect</small></span><span class="st">bekliyor</span></div>
+    <div class="perm" data-p><span>🔔</span><span>Bildirimler<small>Alarm ve hatırlatmalar</small></span><span class="st">bekliyor</span></div>
+    <div class="perm" data-p><span>📷</span><span>Kamera<small>Yemek fotoğrafı</small></span><span class="st">bekliyor</span></div>
+    <div class="perm" data-p><span>🎙</span><span>Mikrofon<small>Sesli not</small></span><span class="st">bekliyor</span></div>
+    <span class="prog" id="oprog"></span>
+    <button class="pbtn" type="button" id="startA">Analize başla</button>
+    <span class="fine">İstediğin an tek tek kapatabilirsin. Veriler önce cihazda işlenir.</span>
+  </div>
+  <div class="sb"><span id="clock">08:00</span><span>5G ▮▮▮</span></div>
+  <div class="top"><div><h3 id="ptitle">Bugün</h3><small id="dayname"></small></div><small>📍 <span id="where"></span></small></div>
+  <div class="days today" id="days"></div>
+  <div class="body today">
+    <div class="now">
+      <span class="lbl">Şu an</span>
+      <span class="ttl" id="curT"></span>
+      <span class="meta" id="curM"></span>
+      <div class="bar"><i id="curP"></i></div>
+      <span class="next" id="nxt"></span>
+    </div>
+    <div class="tl" id="tl"></div>
+  </div>
+  <div class="sim today">
+    <div class="row"><span>Demo saati</span><span id="simV" style="font-family:var(--mono)"></span></div>
+    <input type="range" id="slider" min="405" max="1365" step="5" value="730" aria-label="Demo saati">
+    <label><input type="checkbox" id="stuck"> Yerimden kıpırdamadım (alarmı dene)</label>
+  </div>
+  <div class="pane" id="p-yemek" hidden>
+    <div class="cardm"><span class="lbl">Bugün · tahmini</span><span class="big" id="kcal">1.640 <small>/ 2.400 kcal</small></span>
+      <div class="bar"><i id="kbar" style="width:68%"></i></div>
+      <div class="macro"><span>Protein<b id="mp">96 g</b></span><span>Karbonhidrat<b id="mk">170 g</b></span><span>Yağ<b id="my">58 g</b></span></div></div>
+    <button class="pbtn" type="button" id="snap">📷 Tabağın fotoğrafını çek</button>
+    <div class="cardm" id="meals">
+      <div class="meal"><span class="ph">🍳</span><span>Otel kahvaltısı<small>07:50 · Otel · tekrar eden öğün</small></span><span class="k">640</span></div>
+      <div class="meal"><span class="ph">🥙</span><span>Tavuk dürüm + ayran<small>11:35 · Merter</small></span><span class="k">720</span></div>
+      <div class="meal"><span class="ph">☕</span><span>Filtre kahve + kurabiye<small>15:10 · Hyvex</small></span><span class="k">280</span></div>
+    </div>
+    <span class="warn">⚠ Akşam yemeği bloğu 18:20'de. Fotoğraf bekleniyor.</span>
+    <span class="fine">Fotoğraftan kalori bir tahmindir, ±%20–30 sapabilir. Tıbbi tavsiye değildir.</span>
+  </div>
+  <div class="pane" id="p-uyku" hidden>
+    <div class="cardm"><span class="lbl">Dün gece</span><span class="big">6 sa 40 dk <small>· hedef 8 sa</small></span>
+      <div class="row2"><span>Yatış 23:35</span><span>Kalkış 06:45</span></div></div>
+    <div class="cardm"><span class="lbl">Bu hafta</span>
+      <div class="bars"><div><i style="height:80%"></i>Pzt</div><div><i class="lo" style="height:62%"></i>Sal</div><div><i style="height:88%"></i>Çar</div><div><i class="lo" style="height:70%"></i>Per</div><div><i style="height:92%"></i>Cum</div></div>
+      <div class="row2"><span>Uyku borcu</span><b>3 sa 10 dk</b></div></div>
+    <div class="cardm"><span class="lbl">Bu akşam</span>
+      <div class="row2"><span>Kapanış rutini</span><b>21:30</b></div>
+      <div class="row2"><span>Ekranı bırak</span><b>22:15</b></div>
+      <div class="row2"><span>Yatış</span><b>22:45</b></div>
+      <span class="ins">Borcu kapatmak için bu gece 15 dk erken yat. Yarın kalkış değişmiyor.</span></div>
+    <span class="fine">Veri: Apple Health / Health Connect ve gece telefon kullanımı.</span>
+  </div>
+  <div class="pane" id="p-koc" hidden>
+    <div class="cardm"><span class="lbl">Günlük Nöbet puanı</span><div class="ring" style="--v:78"><span>78</span></div>
+      <div class="row2"><span>Zamanında olma</span><b>3 / 4 alarm</b></div>
+      <div class="row2"><span>Uyku</span><b>6 sa 40 dk</b></div>
+      <div class="row2"><span>Öğünler</span><b>3 / 4</b></div>
+      <div class="row2"><span>Spor</span><b>✓ 45 dk</b></div>
+      <div class="row2"><span>Adım</span><b>7.420</b></div></div>
+    <div class="cardm"><span class="lbl">Su · <span id="wtxt">5 / 8</span> bardak</span><div class="water" id="water"></div></div>
+    <div class="cardm"><span class="lbl">Enerjin şu an?</span><div class="energy" id="energy"></div></div>
+    <div class="cardm"><span class="lbl">AI koç</span>
+      <span class="ins">Uykun 7 saatin altına düştüğü 2 günde 12:05 çıkışını kaçırdın.</span>
+      <span class="ins">Çarşamba öğle yemeği 3 haftadır 14:30'dan sonraya kayıyor. Hyvex'e sandviç götür.</span>
+      <span class="ins">En verimli saatin 14:30–17:00. Zor işleri buraya koydum.</span></div>
+    <button class="pbtn g" type="button" id="voice">🎙 Sesli not bırak</button>
+    <span class="fine" id="vnote"></span>
+  </div>
+  <div class="nav" role="tablist">
+    <button type="button" data-t="today" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Bugün</button>
+    <button type="button" data-t="yemek" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v8a3 3 0 0 0 6 0V3M7 3v18M17 3c-2 0-3 3-3 7h3v11"/></svg>Yemek</button>
+    <button type="button" data-t="uyku" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 15A8 8 0 1 1 9 4a6.5 6.5 0 0 0 11 11z"/></svg>Uyku</button>
+    <button type="button" data-t="koc" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.6 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Koç</button>
+  </div>
+ </div>
+</div>
+ <p class="hint">Önce "Analize başla"ya bas. Sonra gün seç, saati kaydır, alarmı dene. Alttan Yemek, Uyku ve Koç sekmelerine geç; fotoğraf çekmeyi ve su bardaklarını dene.</p>
+</aside>
+</div>
+<footer>Nöbet · 2026 · Gizli yatırımcı önizlemesi</footer>
+<script>
+const C={rutin:"var(--rutin)",ders:"var(--ders)",docks:"var(--docks)",hyvex:"var(--hyvex)",yemek:"var(--yemek)",yol:"var(--yol)"};
+const evening=[["18:00","18:20","→ Otel","yol","M2 · 1 durak","Hyvex"],["18:20","19:00","Akşam yemeği","yemek","Pangaltı","Otel"],["19:00","21:00","DOCKS","docks","otel odası","Otel"],["21:00","21:30","Serbest · su · hafif atıştırma","yemek","","Otel"],["21:30","22:15","Kapanış: günün özeti + yarın","rutin","AI koç ile 2 dk","Otel"],["22:15","22:45","Ekran kapalı · hazırlık","rutin","","Otel"],["22:45","23:59","Uyku","rutin","hedef 8 sa","Otel"]];
+const A=[["06:45","07:00","Kalkış","rutin","","Otel"],["07:00","07:45","Spor","rutin","otel salonu","Otel"],["07:45","08:10","Duş + kahvaltı","rutin","otel","Otel"],["08:10","09:00","→ Merter","yol","M2 + metrobüs","Otel"],["09:00","11:30","DOCKS","docks","Merter","Merter"],["11:30","12:05","Öğle yemeği","yemek","Merter","Merter"],["12:05","13:00","→ Hyvex","yol","metrobüs · ~50 dk","Merter"],["13:00","18:00","Hyvex","hyvex","Şişli Belediyesi","Hyvex"],...evening];
+const morn=[["07:00","07:10","Kalkış","rutin","","Otel"],["07:10","07:50","Spor","rutin","otel salonu","Otel"],["07:50","08:25","Duş + kahvaltı","rutin","otel","Otel"],["08:25","09:00","→ Maslak 1453","yol","M2 · 8 durak","Otel"]];
+const W=[...morn,["09:00","13:25","ESOF301","ders","Operating Systems","Maslak"],["13:25","14:00","→ Hyvex","yol","M2 · ~35 dk","Maslak"],["14:00","14:30","Öğle yemeği","yemek","Şişli","Hyvex"],["14:30","18:00","Hyvex","hyvex","Şişli Belediyesi","Hyvex"],...evening];
+const F=[...morn,["09:00","11:58","ESOF323","ders","Robotics","Maslak"],["12:00","12:40","→ Hyvex","yol","M2 · ~35 dk","Maslak"],["12:40","13:00","Öğle yemeği","yemek","Şişli","Hyvex"],["13:00","18:00","Hyvex","hyvex","Şişli Belediyesi","Hyvex"],...evening];
+const DAYS=[["Pzt","Pazartesi",A],["Sal","Salı",A],["Çar","Çarşamba",W],["Per","Perşembe",A],["Cum","Cuma",F]];
+const ALARMS={0:[["08:10","Otel","Merter'e çıkma vakti geçti. 13:00'te Hyvex'te olman gerek."],["12:05","Merter","Hâlâ Merter'desin. Şimdi çıkmazsan 13:00'ü kaçırırsın."],["18:20","Hyvex","Hâlâ Hyvex'tesin. 19:00 DOCKS bloğu otelde başlıyor."]],
+  2:[["08:25","Otel","Maslak'a çıkma vakti. ESOF301 09:00'da başlıyor."],["18:20","Hyvex","Hâlâ Hyvex'tesin. 19:00 DOCKS bloğu otelde başlıyor."]]};
+ALARMS[0].push(["22:15","Otel","22:15 oldu, ekranı bırak. Yatış 22:45."]);ALARMS[2].push(["22:15","Otel","22:15 oldu, ekranı bırak. Yatış 22:45."]);
+ALARMS[0].splice(2,0,["14:30","Hyvex","Öğle yemeği fotoğrafı gelmedi. Yemeği atlama."]);
+ALARMS[1]=ALARMS[3]=ALARMS[0];ALARMS[4]=ALARMS[2];
+const m=s=>{const[h,mm]=s.split(":").map(Number);return h*60+mm};
+const f=n=>String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");
+let day=0;
+const $=id=>document.getElementById(id);
+$("days").innerHTML=DAYS.map((d,i)=>`<button type="button" id="d${i}" aria-pressed="${i===day}">${d[0]}</button>`).join("");
+DAYS.forEach((d,i)=>$("d"+i).onclick=()=>{day=i;DAYS.forEach((_,j)=>$("d"+j).setAttribute("aria-pressed",j===i));render()});
+$("slider").oninput=render;$("stuck").onchange=render;
+function render(){
+  const t=+$("slider").value, list=DAYS[day][2];
+  $("clock").textContent=$("simV").textContent=f(t);$("dayname").textContent=DAYS[day][1];
+  let ci=list.findIndex(b=>t>=m(b[0])&&t<m(b[1]));
+  if(ci<0) ci=t<m(list[0][0])?-1:list.length;
+  const cur=list[ci];
+  if(cur){const s=m(cur[0]),e=m(cur[1]);
+    $("curT").textContent=cur[2];$("curM").textContent=`${cur[0]}–${cur[1]} · ${cur[4]||cur[5]} · ${e-t} dk kaldı`;
+    $("curP").style.width=((t-s)/(e-s)*100)+"%";$("where").textContent=cur[5];}
+  else{$("curT").textContent=ci<0?"Uyku":"Gün bitti";$("curM").textContent=ci<0?"Kalkış "+list[0][0]:"Yarın görüşürüz";$("curP").style.width=ci<0?"0":"100%";$("where").textContent="Otel";}
+  const nx=list[ci+1];$("nxt").innerHTML=nx?`Sıradaki: <b>${nx[0]}</b> ${nx[2]}`:"";
+  $("tl").innerHTML=list.map((b,i)=>`<div class="it ${i===ci?"cur":i<ci?"past":""}"><span class="tm">${b[0]}</span><span class="k" style="background:${C[b[3]]}"></span><span class="n">${b[2]}${b[4]?`<small>${b[4]}</small>`:""}</span></div>`).join("");
+  const al=(ALARMS[day]||[]).find(a=>t>=m(a[0])&&t<m(a[0])+20);
+  if(al&&$("stuck").checked){$("toastText").innerHTML=`<span class="al">📍 ${al[1]} · ${al[0]}</span><br>${al[2]}`;$("toast").classList.remove("off");$("where").textContent=al[1];}
+  else $("toast").classList.add("off");
+}
+const TT={today:"Bugün",yemek:"Yemek",uyku:"Uyku",koc:"Koç"};
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{const t=b.dataset.t;
+  document.querySelectorAll(".nav button").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  document.querySelectorAll(".today").forEach(e=>e.hidden=t!=="today");
+  ["yemek","uyku","koc"].forEach(k=>$("p-"+k).hidden=k!==t);$("ptitle").textContent=TT[t];});
+let kc=1640,pr=96,kb=170,yg=58,snaps=0;
+const FOODS=[["🍲","Mercimek çorbası + ekmek",310,14,48,7],["🍗","Izgara tavuk + pilav + salata",680,48,70,20],["🥗","Ton balıklı salata",420,32,18,24]];
+$("snap").onclick=()=>{const f=FOODS[snaps++%FOODS.length];$("snap").textContent="Analiz ediliyor…";$("snap").disabled=true;
+  setTimeout(()=>{kc+=f[2];pr+=f[3];kb+=f[4];yg+=f[5];
+    $("meals").insertAdjacentHTML("beforeend",`<div class="meal"><span class="ph">${f[0]}</span><span>${f[1]}<small>${f6()} · AI tahmini ±%25</small></span><span class="k">${f[2]}</span></div>`);
+    $("kcal").innerHTML=kc.toLocaleString("tr-TR")+" <small>/ 2.400 kcal</small>";$("kbar").style.width=Math.min(100,kc/24)+"%";
+    $("mp").textContent=pr+" g";$("mk").textContent=kb+" g";$("my").textContent=yg+" g";
+    $("snap").textContent="📷 Tabağın fotoğrafını çek";$("snap").disabled=false;},900)};
+function f6(){return f(+$("slider").value)}
+let w=5;const drawW=()=>{$("water").innerHTML=[...Array(8)].map((_,i)=>`<button type="button" aria-label="${i+1}. bardak" class="${i<w?"f":""}" data-i="${i}"></button>`).join("");$("wtxt").textContent=w+" / 8";
+  $("water").querySelectorAll("button").forEach(b=>b.onclick=()=>{w=+b.dataset.i+1===w?w-1:+b.dataset.i+1;drawW()})};drawW();
+$("energy").innerHTML=[1,2,3,4,5].map(n=>`<button type="button" aria-pressed="${n===3}">${n}</button>`).join("");
+$("energy").querySelectorAll("button").forEach(b=>b.onclick=()=>$("energy").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b)));
+$("voice").onclick=()=>{$("vnote").textContent="“Metrobüs çok kalabalıktı, 20 dk geç kaldım.” → Yarın Merter çıkışı 11:55'e alındı."};
+$("startA").onclick=()=>{const ps=[...document.querySelectorAll("[data-p]")];$("startA").disabled=true;
+  ps.forEach((e,i)=>setTimeout(()=>{e.classList.add("ok");e.querySelector(".st").textContent="✓ açık";
+    if(i===ps.length-1){$("oprog").textContent="Analiz başladı · Gün 1 / 7. Rutinin öğreniliyor…";$("startA").textContent="Uygulamaya geç";$("startA").disabled=false;$("startA").onclick=()=>{$("onb").hidden=true;$("ptitle").textContent="Bugün";};}},350*(i+1)));};
+render();
+</script>
+</body></html>
